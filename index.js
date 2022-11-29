@@ -1,8 +1,8 @@
 async function database_collection() {
     //connects to database
-    const url_connect = "mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority";
+    const url_connect = 'mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority';
     const {MongoClient} = require('mongodb');
-    const client = new MongoClient(url_connect,{ useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(url_connect, { useNewUrlParser: true, useUnifiedTopology: true });
     try {
         await data_reading(client);
     }
@@ -10,20 +10,28 @@ async function database_collection() {
         console.log("Database error: " + err);
     }
     finally {
-        client.close();
+        await client.close();
     }
 }
 
 async function data_reading(client) {
+    await client.connect();
+
     var readline = require('readline');
     var fs = require('fs');
-    const {connect} = require ('http');
+    const { connect } = require ('http');
 
     var myFile = readline.createInterface({
         input: fs.createReadStream('companies.csv')
     });
+
     // sets a counter to read the top of the file
     var amount = 0;
+
+    // bool says if it is a name or stock ticker by making
+    // the company name a false value and the stock ticker
+    // the true value
+    var name_or_ticker = false;
 
     //reads file line by line
     myFile.on('line', function (line) {
@@ -32,11 +40,37 @@ async function data_reading(client) {
 
         //iterates through the file
         if (amount > 0) {
+            for (let i = 0; i < line.length; i++) {
+                if (line[i] === ',') {
+                    name_or_ticker = true;
+                    continue;
+                }
+                if (name_or_ticker === false) {
+                    company_name += name_or_ticker[i];
+                } else {
+                    stock_ticker += name_or_ticker[i];
+                }
+            }
+            var json_data = {"company name" : company_name, "stock ticker" : stock_ticker};
+            add_dbdata(json_data, client);
 
-        } else {
-
+            // reset the data holders
+            company_name = "";
+            stock_ticker = "";
+            name_or_ticker = false;
         }
-        console.log('"' +  line + '" has ' + line.length + ' characters');
+        amount++;
+    });
+}
+
+async function add_dbdata(json_data, client) {
+    const collection = client.db('EQUITIES').collection('equities');
+    await collection.insertOne(json_data, function(err) {
+        if (err) {
+            throw err;
+        }
     });
 
 }
+
+database_collection().catch(console.error);
