@@ -1,7 +1,7 @@
 async function database_collection() {
     //connects to database
-    const url_connect = 'mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority';
     const {MongoClient} = require('mongodb');
+    const url_connect = 'mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority';
     const client = new MongoClient(url_connect, { useNewUrlParser: true, useUnifiedTopology: true });
     try {
         await data_reading(client);
