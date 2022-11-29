@@ -6,8 +6,8 @@ async function database_collection() {
     try {
         await data_reading(client);
     }
-    catch(err) {
-        console.log("Database error: " + err);
+    catch(error) {
+        console.log("Database error: " + error);
     }
     finally {
         await client.close();
@@ -64,13 +64,14 @@ async function data_reading(client) {
 }
 
 async function add_dbdata(json_data, client) {
-    const collection = client.db('EQUITIES').collection('equities');
-    await collection.insertOne(json_data, function(err) {
-        if (err) {
-            throw err;
+    const collection = client.db('stoker').collection('equities');
+    await collection.insertOne(json_data, function(error) {
+        if (error) {
+            throw error;
         }
     });
 
 }
 
 database_collection().catch(console.error);
+
