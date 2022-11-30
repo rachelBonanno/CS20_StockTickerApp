@@ -1,10 +1,12 @@
+//connects to database
+const {MongoClient} = require('mongodb');
+const url_connect = 'mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority';
+const client = new MongoClient(url_connect);
+
+
 async function database_collection() {
-    //connects to database
-    const {MongoClient} = require('mongodb');
-    const url_connect = 'mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority';
-    const client = new MongoClient(url_connect, { useNewUrlParser: true, useUnifiedTopology: true });
     try {
-        await data_reading(client);
+        await data_reading();
     }
     catch(error) {
         console.log("Database error: " + error);
@@ -14,7 +16,7 @@ async function database_collection() {
     }
 }
 
-async function data_reading(client) {
+async function data_reading() {
     await client.connect();
 
     var readline = require('readline');
@@ -22,7 +24,7 @@ async function data_reading(client) {
     const { connect } = require ('http');
 
     var myFile = readline.createInterface({
-        input: fs.createReadStream('companies.csv')
+        input: fs.readFile('./companies.csv')
     });
 
     // sets a counter to read the top of the file
@@ -52,7 +54,7 @@ async function data_reading(client) {
                 }
             }
             var json_data = {"company name" : company_name, "stock ticker" : stock_ticker};
-            add_dbdata(json_data, client);
+            adddbdata(json_data, client);
 
             // reset the data holders
             company_name = "";
@@ -63,7 +65,7 @@ async function data_reading(client) {
     });
 }
 
-async function add_dbdata(json_data, client) {
+async function adddbdata(json_data, client) {
     const collection = client.db('stoker').collection('equities');
     await collection.insertOne(json_data, function(error) {
         if (error) {
