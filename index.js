@@ -1,79 +1,55 @@
-//connects to database
-const {MongoClient} = require('mongodb');
-const url_connect = 'mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority';
-const client = new MongoClient(url_connect);
+const {MongoClient} = require("mongodb");
 
+// Connection URI
+const uri =
+    "mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority";
 
-async function database_collection() {
-    try {
-        await data_reading();
-    }
-    catch(error) {
-        console.log("Database error: " + error);
-    }
-    finally {
-        await client.close();
-    }
-}
+// Create a new MongoClient
+const client = new MongoClient(uri);
 
-async function data_reading() {
+async function run() {
+    // Connect the client to the server (optional starting in v4.7)
     await client.connect();
-
-    var readline = require('readline');
-    var fs = require('fs');
-    const { connect } = require ('http');
-
-    var myFile = readline.createInterface({
-        input: fs.readFile('./companies.csv')
-    });
-
-    // sets a counter to read the top of the file
-    var amount = 0;
-
-    // bool says if it is a name or stock ticker by making
-    // the company name a false value and the stock ticker
-    // the true value
-    var name_or_ticker = false;
-
-    //reads file line by line
-    myFile.on('line', function (line) {
-        var company_name = "";
-        var stock_ticker = "";
-
-        //iterates through the file
-        if (amount > 0) {
-            for (let i = 0; i < line.length; i++) {
-                if (line[i] === ',') {
-                    name_or_ticker = true;
-                    continue;
-                }
-                if (name_or_ticker === false) {
-                    company_name += name_or_ticker[i];
-                } else {
-                    stock_ticker += name_or_ticker[i];
-                }
-            }
-            var json_data = {"company name" : company_name, "stock ticker" : stock_ticker};
-            adddbdata(json_data, client);
-
-            // reset the data holders
-            company_name = "";
-            stock_ticker = "";
-            name_or_ticker = false;
-        }
-        amount++;
-    });
+    // Establish and verify connection
+    await client.db("stocks").command({ping: 1});
+    console.log("Connected successfully to server");
 }
 
-async function adddbdata(json_data, client) {
-    const collection = client.db('stoker').collection('equities');
-    await collection.insertOne(json_data, function(error) {
-        if (error) {
-            throw error;
-        }
-    });
+
+async function insert(name, ticker) {
+
+    const database = client.db("stoker");
+    const equities = database.collection("equities");
+    const doc = {
+        name: name,
+        ticker: ticker,
+    }
+    const result = await equities.insertOne(doc);
+
+    console.log(`A document was inserted with the _id: ${result.insertedId}`);
 
 }
 
-database_collection().catch(console.error);
+
+async function readData() {
+    await run()
+
+    var fs = require('fs'),
+        path = './companies.csv';
+
+    await fs.readFile(path, {encoding: 'utf-8'}, async function (err, data) {
+        var array = data.split("\n");
+        for (let i = 1; i < array.length; i++) {
+            var line = array[i].split(",")
+            console.log(line)
+            await insert(line[0], line[1])
+        }
+        await client.close();
+
+    });
+}
+
+readData()
+
+
 
