@@ -2,12 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="style.css" rel="stylesheet" type="text/css">
-    <title>JSON Song List</title>
+    <style>
+        body {
+            background-color: #a58aff;
+        }
+        h1 {
+            font-family: "papyrus", cursive;
+            font-size: 50px;
+            color: #3d2d75;
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+
+        table {
+            margin-right: auto;
+            margin-left: auto;
+        }
+        label {
+            display: inline-block;
+            font-size : 30px;
+            font-family: "Brush Script MT", "Brush Script Std", cursive;
+            color : #db3072;
+            text-align: center;
+        }
+
+        input {
+            display: inline-block;
+        }
+
+        .box {
+            margin: 20px;
+            padding: 30px;
+            background: #ff73a9;
+        }
+        .box:hover {
+            background-color: #ff99c0;
+            color: #000000;
+        }
+    </style>
+    <title>Stock Ticker</title>
 </head>
 <body>
     <section>
-        <h1 class="heading">Song List</h1>
+        <h1 class="heading">Stock Ticker</h1>
+        <form name="formster">
+            <p class="box">
+                <label>What do you want to see?</label><br><br><input type="text" name='fname'/>
+            </p>
+            <p class="box">
+                <label>What did you input?</label> <br><br>
+                <input type="radio"  name="p_or_d" value = "symbol" checked="checked"/>Stock Ticker Symbol
+                <br>
+                <input type="radio"  name='p_or_d' value = 'company'/>Company Name
+            </p>
+            <input type="button" value="Submit" onclick="userInput()"/>
+
+        </form>
     </section>
 </body>
 </html>
