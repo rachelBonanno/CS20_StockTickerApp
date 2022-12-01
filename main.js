@@ -7,14 +7,7 @@ const client = new MongoClient(uri);
 
 http.createServer(async function (req, res) {
     console.log("made it into create server");
-    if (req.url == "/") {
-        file = 'index.html';
-        fs.readFile(file, function(err, txt) {
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write(txt);
-            res.end();
-        });
-    } else if (req.url == "/process") {
+    if (req.url === "/process") {
         await connect();
         file = 'output.html';
         fs.readFile(file, async function (err, txt) {
@@ -33,9 +26,12 @@ http.createServer(async function (req, res) {
         });
 
     } else {
-        res.writeHead(200, {'Content-Type':'text/html'});
-        res.write ("Unknown page request");
-        res.end();
+        file = 'index.html';
+        fs.readFile(file, function(err, txt) {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(txt);
+            res.end();
+        });
     }
 }).listen(8080);
 
@@ -44,20 +40,20 @@ function searchdata(query, res, comp) {
     const equities = database.collection("equities");
 
     equities.find(comp ? {"name": query} : {"ticker": query + "\r"}).toArray(async function (err, result) {
-        if (err) {
-            throw err;
-        }
+        if (err) throw err;
 
         console.log(result);
 
         if (result.length === 0) {
-            res.write("No results for: " + query);
+            res.write("No results found for: " + query);
         }
 
         await client.close();
+
         for (let i = 0; i < result.length; i++) {
-            res.write("Name: " + result[i].name);
-            res.write("-----Ticker: " + result[i].ticker);
+            res.write("Company Name: " + result[i].name);
+            res.write("<br>");
+            res.write("Stock Ticker: " + result[i].ticker);
             res.write("<br>");
         }
 
@@ -68,5 +64,5 @@ function searchdata(query, res, comp) {
 async function connect() {
     await client.connect();
     await client.db("stoker").command({ping: 1});
-    console.log("Connected successfully to server");
+    console.log("Server Connected Successfully");
 }
