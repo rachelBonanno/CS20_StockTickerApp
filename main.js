@@ -1,10 +1,8 @@
-const {MongoClient} = require("mongodb");
 var http = require('http');
 const fs = require("fs");
 var qs = require('querystring');
-// Connection URI
+const {MongoClient} = require("mongodb");
 const uri = "mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority";
-// Create a new MongoClient
 const client = new MongoClient(uri);
 
 http.createServer(function (req, res) {
