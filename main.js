@@ -6,6 +6,7 @@ const uri = "mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?re
 const client = new MongoClient(uri);
 
 http.createServer(async function (req, res) {
+    console.log("made it into create server");
     if (req.url == "/") {
         file = 'index.html';
         fs.readFile(file, function(err, txt) {
