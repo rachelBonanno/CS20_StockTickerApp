@@ -43,37 +43,42 @@
         }
     </style>
     <title>Stock Ticker</title>
-    <script>
-        function userInput() {
-            let x = document.forms["formster"]["theinput"].value;
-            if (x == "") {
-                alert("Please input a stock ticker symbol or company name.");
-            } else {
-                new_window = window.open('receipt.html','_blank');
-                if (document.querySelector('input[value=symbol]').checked) {
-                    new_window.document.write("symbol");
-                } else {
-                    new_window.document.write("company");
-                }
-                new_window.document.write(x);
-            }
-        }
-    </script>
+<!--    <script>-->
+<!--        function userInput() {-->
+<!--            let x = document.forms["formster"]["theinput"].value;-->
+<!--            if (x == "") {-->
+<!--                alert("Please input a stock ticker symbol or company name.");-->
+<!--            } else {-->
+<!--                new_window = window.open('receipt.html','_blank');-->
+<!--                if (document.querySelector('input[value=symbol]').checked) {-->
+<!--                    new_window.document.write("symbol");-->
+<!--                } else {-->
+<!--                    new_window.document.write("company");-->
+<!--                }-->
+<!--                new_window.document.write(x);-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
 </head>
 <body>
     <section>
         <h1 class="heading">Stock Ticker</h1>
+
+        <form method='post' action='http://localhost:8080/process'>
+
         <form name="formster">
             <p class="box">
                 <label>What do you want to see?</label><br><br><input type="text" name='theinput'/>
             </p>
             <p class="box">
                 <label>What did you input?</label> <br><br>
-                <input type="radio"  name="p_or_d" value = "symbol" checked="checked"/>Stock Ticker Symbol
+                <input type="radio"  name="p_or_d" value = "symbol" checked="checked"/>
+                <label for="ticker">Stock Ticker Symbol</label>
                 <br>
-                <input type="radio"  name='p_or_d' value = 'company'/>Company Name
+                <input type="radio"  name='p_or_d' value = 'company'/>
+                <label for="company">Company Name</label>
             </p>
-            <input type="button" value="Submit" onclick="userInput()"/>
+            <input type="button" value="Submit"/>
 
         </form>
     </section>
