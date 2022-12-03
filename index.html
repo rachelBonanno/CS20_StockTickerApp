@@ -20,7 +20,7 @@
             margin-right: auto;
             margin-left: auto;
         }
-        label {
+        .headings {
             display: inline-block;
             font-size : 30px;
             font-family: "Brush Script MT", "Brush Script Std", cursive;
@@ -49,15 +49,15 @@
         <h1 class="heading">Stock Ticker</h1>
 
         <form method='post' action='http://localhost:8080/process'>
-            <p class="box">
-                <label>What do you want to see?</label><br><br><input type="text" name='theinput'/>
-            </p>
-            <p class="box">
-                <label>What did you input?</label> <br><br>
-                <input type="radio" id="ticker" name="p_or_d" value = "ticker"/>Stock Ticker Symbol
+            <div class="box">
+                <label class="headings">What do you want to see?</label><br><br><input type="text" name='theinput'/>
+            </div>
+            <div class="box">
+                <label class="headings">What did you input?</label> <br><br>
+                <input type="radio" id="ticker" name="p_or_d" value = "ticker"/><label for="ticker">Stock Ticker Symbol</label>
                 <br>
-                <input type="radio"  id="company" name="p_or_d" value = "company" checked="checked"/>Company Name
-            </p>
+                <input type="radio"  id="company" name="p_or_d" value = "company" checked="checked"/><label for="company">Company Name</label>
+            </div>
             <input type="submit" value="Submit"/>
         </form>
     </section>

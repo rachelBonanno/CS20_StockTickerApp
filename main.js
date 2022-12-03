@@ -1,5 +1,5 @@
 var http = require('http');
-const fs = require("fs");
+var fs = require("fs");
 var qs = require('querystring');
 const {MongoClient} = require("mongodb");
 const uri = "mongodb+srv://user:ZqP6eA$4qv6y5MA@equities.lx3addr.mongodb.net/?retryWrites=true&w=majority";
